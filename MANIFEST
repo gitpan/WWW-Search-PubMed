@@ -1,6 +1,8 @@
-PubMed.pm
+lib/WWW/Search/PubMed.pm
 Makefile.PL
-t/test.t
-README
-INSTALL
 MANIFEST
+META.yml                                Module meta-data (added by MakeMaker)
+README
+SIGNATURE
+t/1-test.t
+t/0-signature.t
