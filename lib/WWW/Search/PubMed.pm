@@ -21,8 +21,8 @@ NCBI/PubMed abstracts database.
 
 =head1 VERSION
 
-This document describes WWW::Search::PubMed version 1.1.0,
-released 9 February 2006.
+This document describes WWW::Search::PubMed version 1.002,
+released 11 October 2006.
 
 =head1 REQUIRES
 
@@ -31,7 +31,7 @@ released 9 February 2006.
 
 =cut
 
-our($VERSION)	= '1.001';
+our($VERSION)	= '1.002';
 
 use strict;
 use warnings;
@@ -46,6 +46,16 @@ our $debug				= 0;
 use constant	ARTICLES_PER_REQUEST	=> 20;
 use constant	QUERY_ARTICLE_LIST_URI	=> 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmax=500';	# term=ACTG
 use constant	QUERY_ARTICLE_INFO_URI	=> 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed';	# &id=12167276&retmode=xml
+
+=begin private
+
+=item C<< native_setup_search ( $query, $options ) >>
+
+Sets up the NCBI search using the supplied C<$query> string.
+
+=end private
+
+=cut
 
 sub native_setup_search {
 	my $self	= shift;
@@ -79,6 +89,16 @@ sub native_setup_search {
 		return undef;
 	}
 }
+
+=begin private
+
+=item C<< native_retrieve_some >>
+
+Requests search results from NCBI, adding the results to the WWW::Search object's cache.
+
+=end private
+
+=cut
 
 sub native_retrieve_some {
 	my $self	= shift;

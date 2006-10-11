@@ -1,5 +1,5 @@
 This file contains message digests of all files listed in MANIFEST,
-signed via the Module::Signature module, version 0.52.
+signed via the Module::Signature module, version 0.54.
 
 To verify the content in this distribution, first make sure you have
 Module::Signature installed, then type:
@@ -14,17 +14,26 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 90f06251050a970274cc91801b7e07eccc06630d MANIFEST
+SHA1 7f91884f383814877194ea7554dcb64b7be67275 Changes
+SHA1 56b915b81534e284f7af06a07026ef4689bfbfdf MANIFEST
 SHA1 ca8e973a3e503cfb5f8302c425a6d8b50815dd86 META.yml
-SHA1 6bc17ba2cd67d600b21269c17bb0c985668df217 Makefile.PL
+SHA1 d04584cf0a1e992a899ed39460214ef61cf51f15 Makefile.PL
 SHA1 cc6ebf38b3856badd8f29eb0cdc8c0f40bd8ca53 README
-SHA1 63f38bc772ee9fa55d47615cc1e61db6e3207ca4 lib/WWW/Search/PubMed.pm
+SHA1 5168ee5eb16428a0678eb049293b81613a12efe9 examples/motif_references.pl
+SHA1 017bedfcba1e0c72b36301e6ef21b8712b84d175 inc/Module/Install.pm
+SHA1 b1a70869c098ba602151631386fc510b5bfd3511 inc/Module/Install/Base.pm
+SHA1 d864f4a0dd148e4651cbe29c54c2ffc94d0f05f7 inc/Module/Install/MakeMaker.pm
+SHA1 176d68fe7c07b6ab7cfe09093078b8127bbde786 inc/Module/Install/Makefile.pm
+SHA1 8b37b38215d14f922b3d5132ce33d11d21d531ba inc/Module/Install/Metadata.pm
+SHA1 9e36b150871acc692bd80edef68e08da1b681e8a lib/WWW/Search/PubMed.pm
 SHA1 c555239a3baf28c0073aced65f1f9691c5eb7089 t/0-signature.t
 SHA1 5629885a0ac9336de1478d3ce426dcd98c162296 t/1-test.t
+SHA1 fada08a138c7f5d0c435fbd184ebfbd975f5da7d t/pod.t
+SHA1 7dfbc25c2ead100477bc171b71bb85ba596adcc7 t/pod_coverage.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.2.4 (Darwin)
 
-iD8DBQFD6u+qhPK6VMqoyC0RAlnvAJ98hLq74xNW02GYTiX9zunrM+79DgCfW4xt
-0nlJgi8VEUlKTwlpNKCM52o=
-=TMJI
+iD8DBQFFLXk4hPK6VMqoyC0RAl8iAJ0aNdLEwzr1gxEwf273DgZiLCqMqgCfc7Wt
+rLPGzWWE8SRPg/yerHP/G8I=
+=FZC3
 -----END PGP SIGNATURE-----
