@@ -2,7 +2,7 @@ package WWW::Search::PubMed;
 
 =head1 NAME
 
-WWW::Search::PubMed - Search the NCBI PubMed abstract database
+WWW::Search::PubMed - Search the NCBI PubMed abstract database.
 
 =head1 SYNOPSIS
 
@@ -21,8 +21,8 @@ NCBI/PubMed abstracts database.
 
 =head1 VERSION
 
-This document describes WWW::Search::PubMed version 1.002,
-released 11 October 2006.
+This document describes WWW::Search::PubMed version 1.003,
+released 27 November 2006.
 
 =head1 REQUIRES
 
@@ -31,7 +31,7 @@ released 11 October 2006.
 
 =cut
 
-our($VERSION)	= '1.002';
+our($VERSION)	= '1.003';
 
 use strict;
 use warnings;

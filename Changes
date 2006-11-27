@@ -1,5 +1,9 @@
 Revision history for Perl extension WWW::Search::PubMed:
 
+1.003	Mon Nov 27 2006
+	- More Kwalitee updates:
+	  - Updated META.yml
+
 1.002	Wed Oct 11 2006
 	- Changes to conform to CPANTS Kwalitee:
 	  - Added pod tests.

@@ -15,8 +15,8 @@ DESCRIPTION
        NCBI/PubMed abstracts database.
 
 VERSION
-       This document describes WWW::Search::PubMed version 1.1.0, released
-       9 February 2006.
+       This document describes WWW::Search::PubMed version 1.003,
+       released 27 November 2006.
 
 REQUIRES
        WWW::Search
