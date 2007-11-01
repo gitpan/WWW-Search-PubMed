@@ -16,13 +16,13 @@ WWW::Search::PubMed - Search the NCBI PubMed abstract database.
 
 =head1 DESCRIPTION
 
-WWW::Search::PubMed proivides a WWW::Search backend for searching the
+WWW::Search::PubMed provides a WWW::Search backend for searching the
 NCBI/PubMed abstracts database.
 
 =head1 VERSION
 
-This document describes WWW::Search::PubMed version 1.003,
-released 27 November 2006.
+This document describes WWW::Search::PubMed version 1.004,
+released 31 October 2007.
 
 =head1 REQUIRES
 
@@ -31,13 +31,14 @@ released 27 November 2006.
 
 =cut
 
-our($VERSION)	= '1.003';
+our($VERSION)	= '1.004';
 
 use strict;
 use warnings;
 
 require WWW::Search;
 require WWW::SearchResult;
+use WWW::Search::PubMed::Result;
 use base qw(WWW::Search);
 
 use XML::DOM;
@@ -103,7 +104,7 @@ Requests search results from NCBI, adding the results to the WWW::Search object'
 sub native_retrieve_some {
 	my $self	= shift;
 	
-	return undef unless scalar (@{ $self->{'_article_ids'} });
+	return undef unless scalar (@{ $self->{'_article_ids'} || [] });
 	my $ua			= $self->user_agent();
 	my $url			= QUERY_ARTICLE_INFO_URI . '&id=' . join(',', splice(@{ $self->{'_article_ids'} },0,ARTICLES_PER_REQUEST)) . '&retmode=xml';
 	warn 'Fetching URL: ' . $url if ($debug);
@@ -147,41 +148,44 @@ sub native_retrieve_some {
 			}
 			my $author	= join(', ', @authors);
 			warn "\t$author\n" if ($debug);
-			my ($journal, $page, $volume, $issue, $date, @date);
-			eval {
-				$journal	= ($article->getElementsByTagName('MedlineTA')->item(0)->getChildNodes)[0]->getNodeValue();
-				$page		= ($article->getElementsByTagName('MedlinePgn')->item(0)->getChildNodes)[0]->getNodeValue();
-				$volume		= ($article->getElementsByTagName('Volume')->item(0)->getChildNodes)[0]->getNodeValue();
-				$issue		= ($article->getElementsByTagName('Issue')->item(0)->getChildNodes)[0]->getNodeValue();
-				$date		= $article->getElementsByTagName('PubDate')->item(0);
-				eval {
-					my $year	= ($date->getElementsByTagName('Year')->item(0)->getChildNodes)[0]->getNodeValue();
-					push(@date, $year);
-					my $month	= ($date->getElementsByTagName('Month')->item(0)->getChildNodes)[0]->getNodeValue();
-					push(@date, $month);
-					my $day		= ($date->getElementsByTagName('Day')->item(0)->getChildNodes)[0]->getNodeValue();
-					push(@date, $day);
-				};
-			};
+			
+			my $journal		= $self->get_text_node( $article, 'MedlineTA' );
+			my $page		= $self->get_text_node( $article, 'MedlinePgn' );
+			my $volume		= $self->get_text_node( $article, 'Volume' );
+			my $issue		= $self->get_text_node( $article, 'Issue' );
+			my $pmid		= $self->get_text_node( $article, 'PMID' );
+			my $abstract	= $self->get_text_node( $article, 'AbstractText' );
+			
+			my @date;
+			{
+				my $date		= $article->getElementsByTagName('PubDate')->item(0);
+				push(@date, $self->get_text_node( $date, 'Year' ));
+				push(@date, $self->get_text_node( $date, 'Month' ));
+				push(@date, $self->get_text_node( $date, 'Day' ));
+			}
+			
+			my $hit		= new WWW::Search::PubMed::Result;
 			
 			my $source	= '';
-			if ($@) {
-				warn $@ if ($debug);
-				next unless ($journal);
-			} else {
-				my $date	= join(' ', grep defined, @date);
-				$source	= "${journal}. "
-						. ($date ? "${date}; " : '')
-						. "${volume}"
-						. ($issue ? "(${issue})" : '')
-						. ($page ? ":$page" : '');
-				$source	= "(${source})" if ($source);
-			}
+			my $date	= join(' ', grep defined, @date);
+			$hit->date( $date );
+			$hit->year( $date[0] ) if (defined($date[0]));
+			$hit->month( $date[1] ) if (defined($date[1]));
+			$hit->day( $date[2] ) if (defined($date[2]));
+			
+			$source	= "${journal}. "
+					. ($date ? "${date}; " : '')
+					. ($volume ? "${volume}" : '')
+					. ($issue ? "(${issue})" : '')
+					. ($page ? ":$page" : '');
+			$source	= "(${source})" if ($source);
 			warn "\t$source\n" if ($debug);
 			
-			my $hit		= new WWW::SearchResult;
 			$hit->add_url( $url );
 			$hit->title( $title );
+			
+			$hit->pmid( $pmid );
+			$hit->abstract( $abstract ) if ($abstract);
 			
 			my $desc	= join(' ', grep {$_} ($author, $source));
 			$hit->description( $desc );
@@ -197,19 +201,44 @@ sub native_retrieve_some {
 	
 }
 
+=begin private
+
+=item C<< get_text_node ( $node, $name )
+
+Returns the text contained in the named descendent of the XML $node.
+
+=end private
+
+=cut
+
+sub get_text_node {
+	my $self	= shift;
+	my $node	= shift;
+	my $name	= shift;
+	my $text	= eval { ($node->getElementsByTagName($name)->item(0)->getChildNodes)[0]->getNodeValue() };
+	if ($@) {
+		warn "XML[$name]: $@" if ($debug);
+		return undef;
+	} else {
+		warn "XML[$name]: $text\n" if ($debug);
+		return $text;
+	}
+}
+
 1;
 
 __END__
 
 =head1 SEE ALSO
 
+L<WWW::Search::PubMed::Result>
 L<http://www.ncbi.nlm.nih.gov:80/entrez/query/static/overview.html>
 L<http://eutils.ncbi.nlm.nih.gov/entrez/query/static/esearch_help.html>
 L<http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetchlit_help.html>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2006 Gregory Todd Williams. All rights reserved. This
+Copyright (c) 2003-2007 Gregory Todd Williams. All rights reserved. This
 program is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
 
